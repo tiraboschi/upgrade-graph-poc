@@ -1,0 +1,2326 @@
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[{"apiVersion":"hco.kubevirt.io/v1beta1","kind":"HyperConverged","metadata":{"name":"kubevirt-hyperconverged","namespace":"openshift-cnv"},"spec":{"BareMetalPlatform":false}},{"apiVersion":"networkaddonsoperator.network.kubevirt.io/v1","kind":"NetworkAddonsConfig","metadata":{"name":"cluster"},"spec":{"imagePullPolicy":"IfNotPresent","kubeMacPool":{"rangeEnd":"FD:FF:FF:FF:FF:FF","rangeStart":"02:00:00:00:00:00"},"linuxBridge":{},"macvtap":{},"multus":{},"nmstate":{},"ovs":{}}},{"apiVersion":"kubevirt.io/v1alpha3","kind":"KubeVirt","metadata":{"name":"kubevirt","namespace":"kubevirt"},"spec":{"imagePullPolicy":"Always"}},{"apiVersion":"ssp.kubevirt.io/v1","kind":"KubevirtCommonTemplatesBundle","metadata":{"name":"kubevirt-common-template-bundle","namespace":"kubevirt"}},{"apiVersion":"ssp.kubevirt.io/v1","kind":"KubevirtMetricsAggregation","metadata":{"name":"kubevirt-metrics-aggregation","namespace":"kubevirt"}},{"apiVersion":"ssp.kubevirt.io/v1","kind":"KubevirtNodeLabellerBundle","metadata":{"name":"kubevirt-node-labeller-bundle","namespace":"kubevirt"}},{"apiVersion":"ssp.kubevirt.io/v1","kind":"KubevirtTemplateValidator","metadata":{"name":"kubevirt-template-validator","namespace":"kubevirt"},"spec":{"templateValidatorReplicas":2}},{"apiVersion":"cdi.kubevirt.io/v1beta1","kind":"CDI","metadata":{"name":"cdi","namespace":"cdi"},"spec":{"imagePullPolicy":"IfNotPresent"}},{"apiVersion":"nodemaintenance.kubevirt.io/v1beta1","kind":"NodeMaintenance","metadata":{"name":"nodemaintenance-example"},"spec":{"nodeName":"node02","reason":"Test node maintenance"}},{"apiVersion":"hostpathprovisioner.kubevirt.io/v1beta1","kind":"HostPathProvisioner","metadata":{"name":"hostpath-provisioner"},"spec":{"imagePullPolicy":"IfNotPresent","pathConfig":{"path":"/var/hpvolumes","useNamingPrefix":false}}},{"apiVersion":"v2v.kubevirt.io/v1beta1","kind":"VMImportConfig","metadata":{"name":"vm-import-operator-config"},"spec":{"imagePullPolicy":"IfNotPresent"}}]'
+    capabilities: Full Lifecycle
+    categories: OpenShift Optional
+    certified: "true"
+    containerImage: registry.redhat.io/container-native-virtualization/hyperconverged-cluster-operator@sha256:756d3a06901fd4dac709ce2d1d3a17d7c8acc48df451d2469ccd9e212af6d17e
+    createdAt: "2020-12-09 11:42:47"
+    description: Creates and maintains an OpenShift Virtualization Deployment
+    olm.skipRange: '>=2.4.4 <2.5.0'
+    operatorframework.io/suggested-namespace: openshift-cnv
+    operators.openshift.io/infrastructure-features: '["Disconnected"]'
+    operators.operatorframework.io/internal-objects: '["v2vvmwares.v2v.kubevirt.io","ovirtproviders.v2v.kubevirt.io","networkaddonsconfigs.networkaddonsoperator.network.kubevirt.io","kubevirts.kubevirt.io","kubevirtcommontemplatesbundles.ssp.kubevirt.io","kubevirtmetricsaggregations.ssp.kubevirt.io","kubevirtnodelabellerbundles.ssp.kubevirt.io","kubevirttemplatevalidators.ssp.kubevirt.io","cdis.cdi.kubevirt.io","nodemaintenances.nodemaintenance.kubevirt.io","vmimportconfigs.v2v.kubevirt.io"]'
+    repository: https://github.com/kubevirt/hyperconverged-cluster-operator
+    support: Red Hat
+  name: kubevirt-hyperconverged-operator.v2.5.2
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: Represents the deployment of OpenShift Virtualization
+      displayName: OpenShift Virtualization Deployment
+      kind: HyperConverged
+      name: hyperconvergeds.hco.kubevirt.io
+      specDescriptors:
+      - description: nodeAffinity describes node affinity scheduling rules for the infra pods.
+        displayName: Infra components node affinity
+        path: infra.nodePlacement.affinity.nodeAffinity
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:nodeAffinity
+      - description: podAffinity describes pod affinity scheduling rules for the infra pods.
+        displayName: Infra components pod affinity
+        path: infra.nodePlacement.affinity.podAffinity
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:podAffinity
+      - description: podAntiAffinity describes pod anti affinity scheduling rules for the infra pods.
+        displayName: Infra components pod anti-affinity
+        path: infra.nodePlacement.affinity.podAntiAffinity
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:podAntiAffinity
+      - description: nodeAffinity describes node affinity scheduling rules for the workloads pods.
+        displayName: Workloads components node affinity
+        path: workloads.nodePlacement.affinity.nodeAffinity
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:nodeAffinity
+      - description: podAffinity describes pod affinity scheduling rules for the workloads pods.
+        displayName: Workloads components pod affinity
+        path: workloads.nodePlacement.affinity.podAffinity
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:podAffinity
+      - description: podAntiAffinity describes pod anti affinity scheduling rules for the workloads pods.
+        displayName: Workloads components pod anti-affinity
+        path: workloads.nodePlacement.affinity.podAntiAffinity
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:podAntiAffinity
+      - description: HIDDEN FIELDS - operator version.
+        displayName: HIDDEN FIELDS - operator version
+        path: version
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - description: nodePlacement APIs are temporary hidden
+        displayName: nodePlacement APIs are temporary hidden
+        path: infra
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      - description: nodePlacement APIs are temporary hidden
+        displayName: nodePlacement APIs are temporary hidden
+        path: workloads
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:hidden
+      version: v1beta1
+    - description: V2V Vmware
+      displayName: V2V Vmware
+      kind: V2VVmware
+      name: v2vvmwares.v2v.kubevirt.io
+      version: v1alpha1
+    - description: V2V oVirt
+      displayName: V2V oVirt
+      kind: OVirtProvider
+      name: ovirtproviders.v2v.kubevirt.io
+      version: v1alpha1
+    - description: Cluster Network Addons
+      displayName: Cluster Network Addons
+      kind: NetworkAddonsConfig
+      name: networkaddonsconfigs.networkaddonsoperator.network.kubevirt.io
+      version: v1
+    - description: Represents a KubeVirt deployment
+      displayName: KubeVirt deployment
+      kind: KubeVirt
+      name: kubevirts.kubevirt.io
+      version: v1alpha3
+    - description: Represents a deployment of the predefined VM templates
+      displayName: KubeVirt common templates
+      kind: KubevirtCommonTemplatesBundle
+      name: kubevirtcommontemplatesbundles.ssp.kubevirt.io
+      version: v1
+    - description: Provide aggregation rules for core kubevirt metrics
+      displayName: KubeVirt Metric Aggregation
+      kind: KubevirtMetricsAggregation
+      name: kubevirtmetricsaggregations.ssp.kubevirt.io
+      version: v1
+    - description: Represents a deployment of Node labeller component
+      displayName: KubeVirt Node labeller
+      kind: KubevirtNodeLabellerBundle
+      name: kubevirtnodelabellerbundles.ssp.kubevirt.io
+      version: v1
+    - description: Represents a deployment of admission control webhook to validate the KubeVirt templates
+      displayName: KubeVirt Template Validator admission webhook
+      kind: KubevirtTemplateValidator
+      name: kubevirttemplatevalidators.ssp.kubevirt.io
+      version: v1
+    - description: Represents a CDI deployment
+      displayName: CDI deployment
+      kind: CDI
+      name: cdis.cdi.kubevirt.io
+      version: v1beta1
+    - description: NodeMaintenance is the Schema for the nodemaintenances API
+      kind: NodeMaintenance
+      name: nodemaintenances.nodemaintenance.kubevirt.io
+      version: v1beta1
+    - description: Represents a HostPathProvisioner deployment
+      displayName: HostPathProvisioner deployment
+      kind: HostPathProvisioner
+      name: hostpathprovisioners.hostpathprovisioner.kubevirt.io
+      version: v1beta1
+    - description: Represents a virtual machine import config
+      displayName: Virtual Machine import config
+      kind: VMImportConfig
+      name: vmimportconfigs.v2v.kubevirt.io
+      version: v1beta1
+  description: |-
+    # Requirements
+    Your cluster must be installed on bare metal infrastructure with Red Hat Enterprise Linux CoreOS workers.
+
+    # Details
+    **OpenShift Virtualization** extends Red Hat OpenShift Container Platform, allowing you to host and manage virtualized workloads on the same platform as container-based workloads. From the OpenShift Container Platform web console, you can import a VMware virtual machine from vSphere, create new or clone existing VMs, perform live migrations between nodes, and more. You can use OpenShift Virtualization to manage both Linux and Windows VMs.
+
+    The technology behind OpenShift Virtualization is developed in the [KubeVirt](https://kubevirt.io) open source community. The KubeVirt project extends [Kubernetes](https://kubernetes.io) by adding additional virtualization resource types through [Custom Resource Definitions](https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/) (CRDs). Administrators can use Custom Resource Definitions to manage `VirtualMachine` resources alongside all other resources that Kubernetes provides.
+  displayName: OpenShift Virtualization
+  icon:
+  - base64data: PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3MjEuMTUgNzIxLjE1Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2RjMzkyNjt9LmNscy0ye2ZpbGw6I2NiMzUyODt9LmNscy0ze2ZpbGw6I2ZmZjt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPlByb2R1Y3RfSWNvbi1SZWRfSGF0LUNvbnRhaW5lcl9OYXRpdmVfVmlydHVhbGl6YXRpb24tUkdCPC90aXRsZT48Y2lyY2xlIGNsYXNzPSJjbHMtMSIgY3g9IjM2MC41NyIgY3k9IjM2MC41NyIgcj0iMzU4LjU4Ii8+PHBhdGggY2xhc3M9ImNscy0yIiBkPSJNNjE0LjEzLDEwNywxMDcsNjE0LjEzYzE0MCwxNDAsMzY3LjA3LDE0MCw1MDcuMTEsMFM3NTQuMTYsMjQ3LjA2LDYxNC4xMywxMDdaIi8+PHBvbHlnb24gY2xhc3M9ImNscy0zIiBwb2ludHM9IjM2OC4wMSA1NTIuMzkgNTIzLjIxIDQ3MC40NCAzNjguMDEgMzgwLjg5IDM2OC4wMSA1NTIuMzkiLz48cG9seWdvbiBjbGFzcz0iY2xzLTMiIHBvaW50cz0iMzY4LjAxIDE2OC43NiAzNjguMDEgMzM5Ljk3IDUxOS44NiAyNTIuMzUgMzY4LjAxIDE2OC43NiIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMyIgcG9pbnRzPSIzNzkuNjcgMzYwLjc1IDUzMC4yNSA0NDcuNjMgNTMwLjI1IDI3My44NyAzNzkuNjcgMzYwLjc1Ii8+PHBvbHlnb24gY2xhc3M9ImNscy0zIiBwb2ludHM9IjI3MS43NiAyMzUuNjEgMzI0LjU1IDIwNS4xMyAzMjQuNTUgMjYxLjA4IDM0NS41NSAyNjEuMDggMzQ1LjU1IDE2OC43NiAyNzEuNzYgMjExLjM2IDI3MS43NiAyMzUuNjEiLz48cG9seWdvbiBjbGFzcz0iY2xzLTMiIHBvaW50cz0iMjAwLjQzIDM1My43IDIwMC40MyAyODguODcgMjUwLjMxIDMxNy41OCAyNTAuMzEgMjkzLjM1IDIxMC45NyAyNzAuNzEgMjUwLjMxIDI0OCAyNTAuMzEgMjIzLjc1IDE3OS42MyAyNjQuNTUgMTc5LjQzIDI2NC42NyAxNzkuNDMgMzUzLjcgMjAwLjQzIDM1My43Ii8+PHBvbHlnb24gY2xhc3M9ImNscy0zIiBwb2ludHM9IjMyNC41NSAyODIuNTQgMzI0LjU1IDMzNi4wOSAyNzEuNzYgMzA1LjcgMjcxLjc2IDMyOS45MyAzMjQuNTUgMzYwLjMyIDMyNC41NSA0MjcuNTcgMzQ1LjU1IDQyNy41NyAzNDUuNTUgMzYwLjI5IDM0NS41NSAyODIuNTQgMzI0LjU1IDI4Mi41NCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMyIgcG9pbnRzPSIzMjQuNTUgNDQ5LjAyIDMyNC41NSA1MTYuMDIgMjcxLjc2IDQ4NS41NCAyNzEuNzYgNTA5Ljc5IDM0NS41NSA1NTIuMzkgMzQ1LjU1IDQ0OS4wMiAzMjQuNTUgNDQ5LjAyIi8+PHBvbHlnb24gY2xhc3M9ImNscy0zIiBwb2ludHM9IjI1MC4zMSA0NzMuMTUgMjAwLjQzIDQ0NC4zNiAyMDAuNDMgMzc1LjE2IDE3OS40MyAzNzUuMTYgMTc5LjQzIDQ1Ni40OCAyNTAuMzEgNDk3LjQgMjUwLjMxIDQ3My4xNSIvPjwvc3ZnPgo=
+    mediatype: image/svg+xml
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - hco.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - ssp.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - networkaddonsoperator.network.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - v2v.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - machineremediation.kubevirt.io
+          resources:
+          - machineremediationoperators
+          - machineremediationoperators/status
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          - serviceaccounts
+          verbs:
+          - '*'
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - deployments/finalizers
+          - daemonsets
+          - replicasets
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - update
+        - apiGroups:
+          - batch
+          resources:
+          - jobs
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterroles
+          - clusterrolebindings
+          - roles
+          - rolebindings
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - patch
+          - update
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - privileged
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - operators.coreos.com
+          resources:
+          - clusterserviceversions
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - scheduling.k8s.io
+          resources:
+          - priorityclasses
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+        - apiGroups:
+          - admissionregistration.k8s.io
+          resources:
+          - validatingwebhookconfigurations
+          verbs:
+          - list
+          - watch
+          - update
+          - patch
+        - apiGroups:
+          - console.openshift.io
+          resources:
+          - consoleclidownloads
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - update
+        serviceAccountName: hyperconverged-cluster-operator
+      - rules:
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - privileged
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - operator.openshift.io
+          resources:
+          - networks
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - networkaddonsoperator.network.kubevirt.io
+          resources:
+          - networkaddonsconfigs
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - '*'
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        serviceAccountName: cluster-network-addons-operator
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - create
+          - get
+          - update
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - kubevirts
+          verbs:
+          - get
+          - list
+          - watch
+          - patch
+          - update
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - serviceaccounts
+          - services
+          - endpoints
+          - pods/exec
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - delete
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - patch
+          - delete
+        - apiGroups:
+          - batch
+          resources:
+          - jobs
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - patch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - patch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterroles
+          - clusterrolebindings
+          - roles
+          - rolebindings
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - patch
+          - update
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - patch
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - privileged
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - kubevirt-handler
+          - kubevirt-controller
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - get
+          - list
+          - watch
+          - update
+          - delete
+        - apiGroups:
+          - admissionregistration.k8s.io
+          resources:
+          - validatingwebhookconfigurations
+          - mutatingwebhookconfigurations
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - update
+          - patch
+        - apiGroups:
+          - apiregistration.k8s.io
+          resources:
+          - apiservices
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - update
+          - patch
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          - prometheusrules
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+          - update
+          - patch
+        - apiGroups:
+          - subresources.kubevirt.io
+          resources:
+          - virtualmachines/start
+          - virtualmachines/stop
+          - virtualmachines/restart
+          verbs:
+          - put
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+          - list
+          - watch
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+          - list
+          - delete
+          - patch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - virtualmachines
+          - virtualmachineinstances
+          verbs:
+          - get
+          - list
+          - watch
+          - patch
+          - update
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - virtualmachines/status
+          verbs:
+          - patch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - virtualmachineinstancemigrations
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+          - patch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - virtualmachineinstancepresets
+          verbs:
+          - watch
+          - list
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - limitranges
+          verbs:
+          - watch
+          - list
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - kubevirts
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - snapshot.kubevirt.io
+          resources:
+          - virtualmachinesnapshots
+          - virtualmachinerestores
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - policy
+          resources:
+          - poddisruptionbudgets
+          verbs:
+          - get
+          - list
+          - watch
+          - delete
+          - create
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - configmaps
+          - endpoints
+          verbs:
+          - get
+          - list
+          - watch
+          - delete
+          - update
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - update
+          - create
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - pods/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - nodes
+          verbs:
+          - get
+          - list
+          - watch
+          - update
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumeclaims
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - delete
+          - patch
+        - apiGroups:
+          - snapshot.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - k8s.cni.cncf.io
+          resources:
+          - network-attachment-definitions
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        - apiGroups:
+          - snapshot.storage.k8s.io
+          resources:
+          - volumesnapshotclasses
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - snapshot.storage.k8s.io
+          resources:
+          - volumesnapshots
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - storageclasses
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - virtualmachineinstances
+          verbs:
+          - update
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumeclaims
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - nodes
+          verbs:
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - kubevirts
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - subresources.kubevirt.io
+          resources:
+          - version
+          verbs:
+          - get
+          - list
+        - apiGroups:
+          - subresources.kubevirt.io
+          resources:
+          - virtualmachineinstances/console
+          - virtualmachineinstances/vnc
+          verbs:
+          - get
+        - apiGroups:
+          - subresources.kubevirt.io
+          resources:
+          - virtualmachineinstances/pause
+          - virtualmachineinstances/unpause
+          verbs:
+          - get
+          - update
+        - apiGroups:
+          - subresources.kubevirt.io
+          resources:
+          - virtualmachines/start
+          - virtualmachines/stop
+          - virtualmachines/restart
+          verbs:
+          - update
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - virtualmachines
+          - virtualmachineinstances
+          - virtualmachineinstancepresets
+          - virtualmachineinstancereplicasets
+          - virtualmachineinstancemigrations
+          verbs:
+          - get
+          - delete
+          - create
+          - update
+          - patch
+          - list
+          - watch
+          - deletecollection
+        - apiGroups:
+          - snapshot.kubevirt.io
+          resources:
+          - virtualmachinesnapshots
+          - virtualmachinesnapshotcontents
+          - virtualmachinerestores
+          verbs:
+          - get
+          - delete
+          - create
+          - update
+          - patch
+          - list
+          - watch
+          - deletecollection
+        - apiGroups:
+          - subresources.kubevirt.io
+          resources:
+          - virtualmachineinstances/console
+          - virtualmachineinstances/vnc
+          verbs:
+          - get
+        - apiGroups:
+          - subresources.kubevirt.io
+          resources:
+          - virtualmachineinstances/pause
+          - virtualmachineinstances/unpause
+          verbs:
+          - get
+          - update
+        - apiGroups:
+          - subresources.kubevirt.io
+          resources:
+          - virtualmachines/start
+          - virtualmachines/stop
+          - virtualmachines/restart
+          verbs:
+          - update
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - virtualmachines
+          - virtualmachineinstances
+          - virtualmachineinstancepresets
+          - virtualmachineinstancereplicasets
+          - virtualmachineinstancemigrations
+          verbs:
+          - get
+          - delete
+          - create
+          - update
+          - patch
+          - list
+          - watch
+        - apiGroups:
+          - snapshot.kubevirt.io
+          resources:
+          - virtualmachinesnapshots
+          - virtualmachinesnapshotcontents
+          - virtualmachinerestores
+          verbs:
+          - get
+          - delete
+          - create
+          - update
+          - patch
+          - list
+          - watch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - virtualmachines
+          - virtualmachineinstances
+          - virtualmachineinstancepresets
+          - virtualmachineinstancereplicasets
+          - virtualmachineinstancemigrations
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - snapshot.kubevirt.io
+          resources:
+          - virtualmachinesnapshots
+          - virtualmachinesnapshotcontents
+          - virtualmachinerestores
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: kubevirt-operator
+      - rules:
+        - apiGroups:
+          - kubevirt.io
+          - ssp.kubevirt.io
+          - template.openshift.io
+          resources:
+          - '*'
+          verbs:
+          - create
+          - get
+          - list
+          - patch
+          - update
+          - watch
+          - delete
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - datavolumes
+          - datavolumes/source
+          verbs:
+          - create
+          - get
+          - list
+          - patch
+          - update
+          - watch
+          - delete
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - prometheusrules
+          verbs:
+          - create
+          - get
+          - list
+          - patch
+          - watch
+          - delete
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterroles
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+          - patch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+          - patch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - roles
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+          - patch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - rolebindings
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+          - patch
+        - apiGroups:
+          - extensions
+          - apps
+          resources:
+          - deployments
+          - deployments/finalizers
+          - replicasets
+          - daemonsets
+          verbs:
+          - create
+          - update
+          - get
+          - list
+          - patch
+          - watch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - serviceaccounts
+          - configmaps
+          - persistentvolumeclaims
+          - services
+          - services/finalizers
+          verbs:
+          - create
+          - update
+          - get
+          - patch
+          - list
+          - watch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - nodes
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - persistentvolumeclaims/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - create
+          - get
+          - list
+          - patch
+          - watch
+        - apiGroups:
+          - admissionregistration.k8s.io
+          resources:
+          - validatingwebhookconfigurations
+          verbs:
+          - create
+          - get
+          - list
+          - patch
+          - watch
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - get
+          - list
+          - create
+          - watch
+          - patch
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - privileged
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - use
+        serviceAccountName: kubevirt-ssp-operator
+      - rules:
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          - clusterroles
+          verbs:
+          - '*'
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - get
+          - list
+          - watch
+          - update
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          verbs:
+          - get
+          - list
+          - watch
+          - delete
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - '*'
+        - apiGroups:
+          - cdi.kubevirt.io
+          - upload.cdi.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - admissionregistration.k8s.io
+          resources:
+          - validatingwebhookconfigurations
+          - mutatingwebhookconfigurations
+          verbs:
+          - '*'
+        - apiGroups:
+          - apiregistration.k8s.io
+          resources:
+          - apiservices
+          verbs:
+          - '*'
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumeclaims
+          verbs:
+          - get
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - datavolumes
+          verbs:
+          - list
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - cdis
+          verbs:
+          - get
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - cdis/finalizers
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumeclaims
+          - volumesnapshots
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumeclaims/finalizers
+          - pods/finalizers
+          - volumesnapshots/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - delete
+        - apiGroups:
+          - extensions
+          resources:
+          - ingresses
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - storageclasses
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - route.openshift.io
+          resources:
+          - routes
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - snapshot.storage.k8s.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumeclaims
+          verbs:
+          - get
+        serviceAccountName: cdi-operator
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - services
+          - endpoints
+          - events
+          - configmaps
+          - serviceaccounts
+          verbs:
+          - '*'
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
+          verbs:
+          - get
+          - list
+          - update
+          - patch
+          - watch
+          - create
+        - apiGroups:
+          - policy
+          resources:
+          - poddisruptionbudgets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - nodes
+          verbs:
+          - get
+          - list
+          - update
+          - patch
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods/eviction
+          verbs:
+          - create
+        - apiGroups:
+          - ""
+          resources:
+          - namespaces
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - '*'
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - nodemaintenance.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - oauth.openshift.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        serviceAccountName: node-maintenance-operator
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumes
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - persistentvolumeclaims
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - list
+          - watch
+          - create
+          - patch
+          - update
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resourceNames:
+          - hostpath-provisioner
+          resources:
+          - clusterrolebindings
+          verbs:
+          - update
+          - delete
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          verbs:
+          - list
+          - get
+          - watch
+          - create
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resourceNames:
+          - hostpath-provisioner
+          resources:
+          - clusterroles
+          verbs:
+          - update
+          - delete
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterroles
+          verbs:
+          - list
+          - get
+          - watch
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - hostpath-provisioner-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - hostpathprovisioner.kubevirt.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - list
+          - get
+          - watch
+          - create
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - hostpath-provisioner
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - delete
+          - update
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - storageclasses
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - nodes
+          verbs:
+          - get
+        serviceAccountName: hostpath-provisioner-operator
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - events
+          - configmaps
+          - secrets
+          - serviceaccounts
+          - services
+          - services/finalizers
+          verbs:
+          - '*'
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - deployments/finalizers
+          verbs:
+          - '*'
+        - apiGroups:
+          - v2v.kubevirt.io
+          resources:
+          - vmimportconfigs
+          - vmimportconfigs/finalizers
+          - vmimportconfigs/status
+          verbs:
+          - '*'
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - '*'
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          - clusterroles
+          verbs:
+          - '*'
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - '*'
+        serviceAccountName: vm-import-operator
+      deployments:
+      - name: hco-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: hyperconverged-cluster-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: hyperconverged-cluster-operator
+            spec:
+              containers:
+              - command:
+                - hyperconverged-cluster-operator
+                env:
+                - name: WEBHOOK_MODE
+                  value: "false"
+                - name: KVM_EMULATION
+                - name: OPERATOR_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/hyperconverged-cluster-operator@sha256:756d3a06901fd4dac709ce2d1d3a17d7c8acc48df451d2469ccd9e212af6d17e
+                - name: OPERATOR_NAME
+                  value: hyperconverged-cluster-operator
+                - name: OPERATOR_NAMESPACE
+                  value: openshift-cnv
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: WATCH_NAMESPACE
+                - name: CONVERSION_CONTAINER
+                  value: registry.redhat.io/container-native-virtualization/kubevirt-v2v-conversion@sha256:969583fea6d09f50e3eabde8f79557cf29f159d60d990a53c483b007b2762ecf
+                - name: VMWARE_CONTAINER
+                  value: registry.redhat.io/container-native-virtualization/kubevirt-vmware@sha256:8d74befec0d1e28538d78f33869359ddcc679234f9bc828f3525440830808747
+                - name: SMBIOS
+                  value: |-
+                    Family: Red Hat
+                    Product: Container-native virtualization
+                    Manufacturer: Red Hat
+                    Sku: 2.5.2
+                    Version: 2.5.2
+                - name: MACHINETYPE
+                  value: pc-q35-rhel8.2.0
+                - name: HCO_KV_IO_VERSION
+                  value: v2.5.2
+                - name: KUBEVIRT_VERSION
+                  value: sha256:41443337457558e0d2c5cd8ff8a4fc98e4908254b856342a8571b061e61d5179
+                - name: CDI_VERSION
+                  value: v2.5.2
+                - name: NETWORK_ADDONS_VERSION
+                  value: sha256:bfa7d51fa4b2c2b78c57cfb124083abed3f5b8be2fa115c2ff3269efbe831940
+                - name: SSP_VERSION
+                  value: v2.5.2
+                - name: NMO_VERSION
+                  value: v2.5.2
+                - name: HPPO_VERSION
+                  value: v2.5.2
+                - name: VM_IMPORT_VERSION
+                  value: v2.5.2
+                - name: VIRTCTL_DOWNLOAD_URL
+                  value: https://access.redhat.com/downloads/content/473
+                - name: VIRTCTL_DOWNLOAD_TEXT
+                  value: Red Hat Customer Portal binary download (Linux, MacOSX, and Microsoft Windows)
+                image: registry.redhat.io/container-native-virtualization/hyperconverged-cluster-operator@sha256:756d3a06901fd4dac709ce2d1d3a17d7c8acc48df451d2469ccd9e212af6d17e
+                imagePullPolicy: IfNotPresent
+                name: hyperconverged-cluster-operator
+                readinessProbe:
+                  exec:
+                    command:
+                    - stat
+                    - /tmp/operator-sdk-ready
+                  failureThreshold: 1
+                  initialDelaySeconds: 5
+                  periodSeconds: 5
+                resources: {}
+              serviceAccountName: hyperconverged-cluster-operator
+      - name: hco-webhook
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: hyperconverged-cluster-webhook
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: hyperconverged-cluster-webhook
+            spec:
+              containers:
+              - command:
+                - hyperconverged-cluster-operator
+                env:
+                - name: WEBHOOK_MODE
+                  value: "true"
+                - name: OPERATOR_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/hyperconverged-cluster-operator@sha256:756d3a06901fd4dac709ce2d1d3a17d7c8acc48df451d2469ccd9e212af6d17e
+                - name: OPERATOR_NAME
+                  value: hyperconverged-cluster-webhook
+                - name: OPERATOR_NAMESPACE
+                  value: openshift-cnv
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: WATCH_NAMESPACE
+                - name: VIRTCTL_DOWNLOAD_URL
+                  value: https://access.redhat.com/downloads/content/473
+                - name: VIRTCTL_DOWNLOAD_TEXT
+                  value: Red Hat Customer Portal binary download (Linux, MacOSX, and Microsoft Windows)
+                image: registry.redhat.io/container-native-virtualization/hyperconverged-cluster-operator@sha256:756d3a06901fd4dac709ce2d1d3a17d7c8acc48df451d2469ccd9e212af6d17e
+                imagePullPolicy: IfNotPresent
+                name: hyperconverged-cluster-webhook
+                readinessProbe:
+                  exec:
+                    command:
+                    - stat
+                    - /tmp/operator-sdk-ready
+                  failureThreshold: 1
+                  initialDelaySeconds: 5
+                  periodSeconds: 5
+                resources: {}
+              serviceAccountName: hyperconverged-cluster-operator
+      - name: cluster-network-addons-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: cluster-network-addons-operator
+          strategy:
+            type: Recreate
+          template:
+            metadata:
+              labels:
+                name: cluster-network-addons-operator
+            spec:
+              containers:
+              - env:
+                - name: MULTUS_IMAGE
+                  value: brew-pulp-docker01.web.prod.ext.phx2.redhat.com:8888/openshift/ose-multus-cni:v4.1.0-7.1556622314
+                - name: LINUX_BRIDGE_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/cnv-containernetworking-plugins@sha256:983e753c6d46e802049285dc2ff1a4d4cc8f42a491c0f54e2e764bc5ffffb53b
+                - name: LINUX_BRIDGE_MARKER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/bridge-marker@sha256:990dd018c5278f88194b639381ad4fca78763a9b83aa54db17e73fe592009d84
+                - name: NMSTATE_HANDLER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/kubernetes-nmstate-handler-rhel8@sha256:b323cf93cac96d4a4a840b84232be4a1fa90121506c8f28e5336a49f4b78030f
+                - name: OVS_CNI_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/ovs-cni-plugin@sha256:096c38370c7e3450ae46b21a92be1833f3316c4cfff166bfe11d0698cd96939f
+                - name: OVS_MARKER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/ovs-cni-marker@sha256:f0b85480c0f46d4c5f2d819a691ef0d6f3fd19f75e368a6005fe439556763d44
+                - name: KUBEMACPOOL_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/kubemacpool@sha256:51e54febb85bbde66c75bd269eb2643ec830969af936db3171d93b9ed8637c33
+                - name: MACVTAP_CNI_IMAGE
+                  value: NOT_AVAILABLE
+                - name: OPERATOR_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/cluster-network-addons-operator@sha256:bfa7d51fa4b2c2b78c57cfb124083abed3f5b8be2fa115c2ff3269efbe831940
+                - name: OPERATOR_NAME
+                  value: cluster-network-addons-operator
+                - name: OPERATOR_VERSION
+                  value: sha256:bfa7d51fa4b2c2b78c57cfb124083abed3f5b8be2fa115c2ff3269efbe831940
+                - name: OPERATOR_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: OPERAND_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: WATCH_NAMESPACE
+                image: registry.redhat.io/container-native-virtualization/cluster-network-addons-operator@sha256:bfa7d51fa4b2c2b78c57cfb124083abed3f5b8be2fa115c2ff3269efbe831940
+                imagePullPolicy: IfNotPresent
+                name: cluster-network-addons-operator
+                resources: {}
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: cluster-network-addons-operator
+      - name: virt-operator
+        spec:
+          replicas: 2
+          selector:
+            matchLabels:
+              kubevirt.io: virt-operator
+          strategy:
+            type: RollingUpdate
+          template:
+            metadata:
+              annotations:
+                scheduler.alpha.kubernetes.io/critical-pod: ""
+              labels:
+                kubevirt.io: virt-operator
+                prometheus.kubevirt.io: ""
+              name: virt-operator
+            spec:
+              affinity:
+                podAntiAffinity:
+                  preferredDuringSchedulingIgnoredDuringExecution:
+                  - podAffinityTerm:
+                      labelSelector:
+                        matchExpressions:
+                        - key: kubevirt.io
+                          operator: In
+                          values:
+                          - virt-operator
+                      topologyKey: kubernetes.io/hostname
+                    weight: 1
+              containers:
+              - command:
+                - virt-operator
+                - --port
+                - "8443"
+                - -v
+                - "2"
+                env:
+                - name: OPERATOR_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/virt-operator@sha256:41443337457558e0d2c5cd8ff8a4fc98e4908254b856342a8571b061e61d5179
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: KUBEVIRT_VERSION
+                  value: sha256:41443337457558e0d2c5cd8ff8a4fc98e4908254b856342a8571b061e61d5179
+                - name: VIRT_API_SHASUM
+                  value: sha256:f982a5e33c15e53f6fe873de6b9be85ac94fa1c65e78ac7ca49f21aa613df8e8
+                - name: VIRT_CONTROLLER_SHASUM
+                  value: sha256:f024d5c324f4bad53a8b5ce014658d54656cb5648e281398b9490529566d9f51
+                - name: VIRT_HANDLER_SHASUM
+                  value: sha256:85be45faf753cd06df47ec5170a90a980489b96b1679e72ff7507b97a2f21104
+                - name: VIRT_LAUNCHER_SHASUM
+                  value: sha256:3640f5ccd861da83038da92b2be426f7a1f67e1a514d529283a9174aeebe61c0
+                image: registry.redhat.io/container-native-virtualization/virt-operator@sha256:41443337457558e0d2c5cd8ff8a4fc98e4908254b856342a8571b061e61d5179
+                imagePullPolicy: IfNotPresent
+                name: virt-operator
+                ports:
+                - containerPort: 8443
+                  name: metrics
+                  protocol: TCP
+                - containerPort: 8444
+                  name: webhooks
+                  protocol: TCP
+                readinessProbe:
+                  httpGet:
+                    path: /metrics
+                    port: 8443
+                    scheme: HTTPS
+                  initialDelaySeconds: 5
+                  timeoutSeconds: 10
+                resources: {}
+                volumeMounts:
+                - mountPath: /etc/virt-operator/certificates
+                  name: kubevirt-operator-certs
+                  readOnly: true
+              priorityClassName: kubevirt-cluster-critical
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: kubevirt-operator
+              tolerations:
+              - key: CriticalAddonsOnly
+                operator: Exists
+              volumes:
+              - name: kubevirt-operator-certs
+                secret:
+                  optional: true
+                  secretName: kubevirt-operator-certs
+      - name: kubevirt-ssp-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: kubevirt-ssp-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: kubevirt-ssp-operator
+            spec:
+              containers:
+              - env:
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: IMAGE_REFERENCE
+                  value: registry.redhat.io/container-native-virtualization/kubevirt-ssp-operator@sha256:3ba20e2c06ea0d9828c0b33e521c1417ab74b3c96d5e68bb64211ad40045e5c6
+                - name: WATCH_NAMESPACE
+                - name: KVM_INFO_TAG
+                  value: sha256:d48377f15eb542dbcc6f08370ce304acbdb603bcddeb5a2a40f2a5927cbdc9b0
+                - name: VALIDATOR_TAG
+                  value: sha256:8de09b8a6f8d8c0d9d960eb3c9dfd4923d41a805637cfbe99ab1d9cc4d656488
+                - name: VIRT_LAUNCHER_TAG
+                  value: sha256:3640f5ccd861da83038da92b2be426f7a1f67e1a514d529283a9174aeebe61c0
+                - name: NODE_LABELLER_TAG
+                  value: sha256:d62e26986a22074ccdcae89440e425d857fa9ff0b2dd5cde7244422b0efd90e3
+                - name: CPU_PLUGIN_TAG
+                  value: sha256:9c8f8633fc9946f7a9feaf063c578bbf1786dd6699f3492484832c8c60f174dd
+                - name: IMAGE_NAME_PREFIX
+                - name: OPERATOR_NAME
+                  value: kubevirt-ssp-operator
+                - name: OPERATOR_VERSION
+                  value: v2.5.2
+                image: registry.redhat.io/container-native-virtualization/kubevirt-ssp-operator@sha256:3ba20e2c06ea0d9828c0b33e521c1417ab74b3c96d5e68bb64211ad40045e5c6
+                imagePullPolicy: IfNotPresent
+                name: kubevirt-ssp-operator
+                ports:
+                - containerPort: 60000
+                  name: metrics
+                resources: {}
+              serviceAccountName: kubevirt-ssp-operator
+      - name: cdi-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: cdi-operator
+              operator.cdi.kubevirt.io: ""
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: cdi-operator
+                operator.cdi.kubevirt.io: ""
+            spec:
+              containers:
+              - env:
+                - name: DEPLOY_CLUSTER_RESOURCES
+                  value: "true"
+                - name: OPERATOR_VERSION
+                  value: v2.5.2
+                - name: CONTROLLER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/virt-cdi-controller@sha256:f50dc0f53538aa1ad3e56d944d1f97bb364283d6d73c49dbdab8d4ed34e7a574
+                - name: IMPORTER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/virt-cdi-importer@sha256:92c36d805450b8ea306a7fa3df5e7fcaf2d9dfc21b679a14ce419c76ac35d286
+                - name: CLONER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/virt-cdi-cloner@sha256:37cb39c362c1413cf59115ccc3281331362304adc93ac9984cae2beb882e5cc7
+                - name: APISERVER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/virt-cdi-apiserver@sha256:ae0f0b34fc1055877a8b40b115e0120d0e66f99fb3a15c630ef0ffa32181f073
+                - name: UPLOAD_SERVER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/virt-cdi-uploadserver@sha256:9f44fa8425e28831b191e16a87a80d852f93289cba19f59d2923393b15af29aa
+                - name: UPLOAD_PROXY_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/virt-cdi-uploadproxy@sha256:bc69cf34ba5f2752b52c08a4f8264dfd91f6e85de5f695f15b8d203dbd2e9cf9
+                - name: VERBOSITY
+                  value: "1"
+                - name: PULL_POLICY
+                  value: IfNotPresent
+                image: registry.redhat.io/container-native-virtualization/virt-cdi-operator@sha256:b201e785de11b5b7d52ae6453b650080538f6fb58352a3de6f75255d3f0c3c80
+                imagePullPolicy: IfNotPresent
+                name: cdi-operator
+                ports:
+                - containerPort: 60000
+                  name: metrics
+                  protocol: TCP
+                resources: {}
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: cdi-operator
+      - name: node-maintenance-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: node-maintenance-operator
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: node-maintenance-operator
+            spec:
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                    - matchExpressions:
+                      - key: node-role.kubernetes.io/master
+                        operator: Exists
+              containers:
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: node-maintenance-operator
+                image: registry.redhat.io/container-native-virtualization/node-maintenance-operator@sha256:847e2ae0c42ab2d90a26a61ec5464ef0523d90e7c7419fe2f4168b873410cf5a
+                imagePullPolicy: Always
+                name: node-maintenance-operator
+                resources: {}
+              serviceAccountName: node-maintenance-operator
+              tolerations:
+              - effect: NoSchedule
+                key: node-role.kubernetes.io/master
+      - name: hostpath-provisioner-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: hostpath-provisioner-operator
+              operator.hostpath-provisioner.kubevirt.io: ""
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: hostpath-provisioner-operator
+                operator.hostpath-provisioner.kubevirt.io: ""
+            spec:
+              containers:
+              - env:
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: hostpath-provisioner-operator
+                - name: PROVISIONER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/hostpath-provisioner-rhel8@sha256:da0f0f3b00d9c74f34d7dba64a0b349a7446a604b23b5ba34de9d006f781b2de
+                - name: PULL_POLICY
+                  value: IfNotPresent
+                image: registry.redhat.io/container-native-virtualization/hostpath-provisioner-rhel8-operator@sha256:e09ea7a40756d28ccf0a1b0bddf551b4ece95cb2abb0aa2e116adeb8c09a1982
+                imagePullPolicy: IfNotPresent
+                name: hostpath-provisioner-operator
+                resources: {}
+              serviceAccountName: hostpath-provisioner-operator
+      - name: vm-import-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: vm-import-operator
+              operator.v2v.kubevirt.io: ""
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                name: vm-import-operator
+                operator.v2v.kubevirt.io: ""
+            spec:
+              containers:
+              - env:
+                - name: DEPLOY_CLUSTER_RESOURCES
+                  value: "true"
+                - name: OPERATOR_VERSION
+                  value: v2.5.2
+                - name: CONTROLLER_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/vm-import-controller-rhel8@sha256:8b15f9b6133868194a78dec5890304af337131ed2359ea7a6201c1f0bfc3b7ba
+                - name: PULL_POLICY
+                  value: IfNotPresent
+                - name: WATCH_NAMESPACE
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: MONITORING_NAMESPACE
+                  value: openshift-monitoring
+                - name: VIRTV2V_IMAGE
+                  value: registry.redhat.io/container-native-virtualization/vm-import-virtv2v-rhel8@sha256:ab4216dc2d7ee8d8501fcdb9b44503623f62d37e064c4f99255a72a17f5ba049
+                image: registry.redhat.io/container-native-virtualization/vm-import-operator-rhel8@sha256:9a92fded6940d376c9c6dbf3a0a8de6d7df22c3f40a2c534465f02b74ff6106e
+                imagePullPolicy: IfNotPresent
+                name: vm-import-operator
+                resources: {}
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: vm-import-operator
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - patch
+          - update
+          - delete
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - replicasets
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - patch
+          - update
+          - delete
+        serviceAccountName: cluster-network-addons-operator
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+          - patch
+          - delete
+        serviceAccountName: kubevirt-operator
+      - rules:
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - rolebindings
+          - roles
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - serviceaccounts
+          - configmaps
+          - events
+          - secrets
+          - services
+          verbs:
+          - '*'
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - deployments/finalizers
+          verbs:
+          - '*'
+        - apiGroups:
+          - route.openshift.io
+          resources:
+          - routes
+          - routes/custom-host
+          verbs:
+          - '*'
+        serviceAccountName: cdi-operator
+      - rules:
+        - apiGroups:
+          - apps
+          resources:
+          - daemonsets
+          verbs:
+          - list
+          - get
+          - watch
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - hostpath-provisioner
+          resources:
+          - daemonsets
+          verbs:
+          - delete
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - ""
+          resourceNames:
+          - hostpath-provisioner-admin
+          resources:
+          - serviceaccounts
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - serviceaccounts
+          verbs:
+          - list
+          - get
+          - watch
+          - create
+        serviceAccountName: hostpath-provisioner-operator
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: false
+    type: AllNamespaces
+  keywords:
+  - KubeVirt
+  - Virtualization
+  - VM
+  - CNV
+  - Container-native virtualization
+  - Container native virtualization
+  - Virt
+  - Virtual
+  labels:
+    alm-owner-kubevirt: kubevirt-hyperconverged
+    operated-by: kubevirt-hyperconverged
+  links:
+  - name: Source Code
+    url: https://github.com/kubevirt
+  - name: OpenShift Virtualization
+    url: https://www.openshift.com/learn/topics/virtualization/
+  - name: KubeVirt Project
+    url: https://kubevirt.io
+  maintainers:
+  - email: support@redhat.com
+    name: Red Hat Support
+  maturity: alpha
+  provider:
+    name: Red Hat
+  relatedImages:
+  - image: registry.redhat.io/container-native-virtualization/bridge-marker@sha256:990dd018c5278f88194b639381ad4fca78763a9b83aa54db17e73fe592009d84
+    name: registry.redhat.io/container-native-virtualization/bridge-marker:v2.5.2-4
+  - image: registry.redhat.io/container-native-virtualization/cluster-network-addons-operator@sha256:bfa7d51fa4b2c2b78c57cfb124083abed3f5b8be2fa115c2ff3269efbe831940
+    name: registry.redhat.io/container-native-virtualization/cluster-network-addons-operator:v2.5.2-4
+  - image: registry.redhat.io/container-native-virtualization/cnv-containernetworking-plugins@sha256:983e753c6d46e802049285dc2ff1a4d4cc8f42a491c0f54e2e764bc5ffffb53b
+    name: registry.redhat.io/container-native-virtualization/cnv-containernetworking-plugins:v2.5.2-4
+  - image: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel8@sha256:5705a9e0059e5a72c7f1577b536d609de137cd8557ed7a9b57a61bcc1a96afd3
+    name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel8:v2.5.2-2
+  - image: registry.redhat.io/container-native-virtualization/hostpath-provisioner-rhel8-operator@sha256:e09ea7a40756d28ccf0a1b0bddf551b4ece95cb2abb0aa2e116adeb8c09a1982
+    name: registry.redhat.io/container-native-virtualization/hostpath-provisioner-rhel8-operator:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/hostpath-provisioner-rhel8@sha256:da0f0f3b00d9c74f34d7dba64a0b349a7446a604b23b5ba34de9d006f781b2de
+    name: registry.redhat.io/container-native-virtualization/hostpath-provisioner-rhel8:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/hyperconverged-cluster-operator@sha256:756d3a06901fd4dac709ce2d1d3a17d7c8acc48df451d2469ccd9e212af6d17e
+    name: registry.redhat.io/container-native-virtualization/hyperconverged-cluster-operator:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/kubemacpool@sha256:51e54febb85bbde66c75bd269eb2643ec830969af936db3171d93b9ed8637c33
+    name: registry.redhat.io/container-native-virtualization/kubemacpool:v2.5.2-4
+  - image: registry.redhat.io/container-native-virtualization/kubernetes-nmstate-handler-rhel8@sha256:b323cf93cac96d4a4a840b84232be4a1fa90121506c8f28e5336a49f4b78030f
+    name: registry.redhat.io/container-native-virtualization/kubernetes-nmstate-handler-rhel8:v2.5.2-4
+  - image: registry.redhat.io/container-native-virtualization/kubevirt-cpu-model-nfd-plugin@sha256:9c8f8633fc9946f7a9feaf063c578bbf1786dd6699f3492484832c8c60f174dd
+    name: registry.redhat.io/container-native-virtualization/kubevirt-cpu-model-nfd-plugin:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/kubevirt-cpu-node-labeller@sha256:d62e26986a22074ccdcae89440e425d857fa9ff0b2dd5cde7244422b0efd90e3
+    name: registry.redhat.io/container-native-virtualization/kubevirt-cpu-node-labeller:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/kubevirt-kvm-info-nfd-plugin@sha256:d48377f15eb542dbcc6f08370ce304acbdb603bcddeb5a2a40f2a5927cbdc9b0
+    name: registry.redhat.io/container-native-virtualization/kubevirt-kvm-info-nfd-plugin:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/kubevirt-metrics-collector@sha256:e210e00cb97f4b776af72afbf2e43789fc8bbfc9bcdb660d93f882e930de5622
+    name: registry.redhat.io/container-native-virtualization/kubevirt-metrics-collector:v2.5.2-2
+  - image: registry.redhat.io/container-native-virtualization/kubevirt-ssp-operator@sha256:3ba20e2c06ea0d9828c0b33e521c1417ab74b3c96d5e68bb64211ad40045e5c6
+    name: registry.redhat.io/container-native-virtualization/kubevirt-ssp-operator:v2.5.2-5
+  - image: registry.redhat.io/container-native-virtualization/kubevirt-template-validator@sha256:8de09b8a6f8d8c0d9d960eb3c9dfd4923d41a805637cfbe99ab1d9cc4d656488
+    name: registry.redhat.io/container-native-virtualization/kubevirt-template-validator:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/kubevirt-v2v-conversion@sha256:969583fea6d09f50e3eabde8f79557cf29f159d60d990a53c483b007b2762ecf
+    name: registry.redhat.io/container-native-virtualization/kubevirt-v2v-conversion:v2.5.2-4
+  - image: registry.redhat.io/container-native-virtualization/kubevirt-vmware@sha256:8d74befec0d1e28538d78f33869359ddcc679234f9bc828f3525440830808747
+    name: registry.redhat.io/container-native-virtualization/kubevirt-vmware:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/node-maintenance-operator@sha256:847e2ae0c42ab2d90a26a61ec5464ef0523d90e7c7419fe2f4168b873410cf5a
+    name: registry.redhat.io/container-native-virtualization/node-maintenance-operator:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/ovs-cni-marker@sha256:f0b85480c0f46d4c5f2d819a691ef0d6f3fd19f75e368a6005fe439556763d44
+    name: registry.redhat.io/container-native-virtualization/ovs-cni-marker:v2.5.2-5
+  - image: registry.redhat.io/container-native-virtualization/ovs-cni-plugin@sha256:096c38370c7e3450ae46b21a92be1833f3316c4cfff166bfe11d0698cd96939f
+    name: registry.redhat.io/container-native-virtualization/ovs-cni-plugin:v2.5.2-4
+  - image: registry.redhat.io/container-native-virtualization/virt-api@sha256:f982a5e33c15e53f6fe873de6b9be85ac94fa1c65e78ac7ca49f21aa613df8e8
+    name: registry.redhat.io/container-native-virtualization/virt-api:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-cdi-apiserver@sha256:ae0f0b34fc1055877a8b40b115e0120d0e66f99fb3a15c630ef0ffa32181f073
+    name: registry.redhat.io/container-native-virtualization/virt-cdi-apiserver:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-cdi-cloner@sha256:37cb39c362c1413cf59115ccc3281331362304adc93ac9984cae2beb882e5cc7
+    name: registry.redhat.io/container-native-virtualization/virt-cdi-cloner:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-cdi-controller@sha256:f50dc0f53538aa1ad3e56d944d1f97bb364283d6d73c49dbdab8d4ed34e7a574
+    name: registry.redhat.io/container-native-virtualization/virt-cdi-controller:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-cdi-importer@sha256:92c36d805450b8ea306a7fa3df5e7fcaf2d9dfc21b679a14ce419c76ac35d286
+    name: registry.redhat.io/container-native-virtualization/virt-cdi-importer:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-cdi-operator@sha256:b201e785de11b5b7d52ae6453b650080538f6fb58352a3de6f75255d3f0c3c80
+    name: registry.redhat.io/container-native-virtualization/virt-cdi-operator:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-cdi-uploadproxy@sha256:bc69cf34ba5f2752b52c08a4f8264dfd91f6e85de5f695f15b8d203dbd2e9cf9
+    name: registry.redhat.io/container-native-virtualization/virt-cdi-uploadproxy:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-cdi-uploadserver@sha256:9f44fa8425e28831b191e16a87a80d852f93289cba19f59d2923393b15af29aa
+    name: registry.redhat.io/container-native-virtualization/virt-cdi-uploadserver:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-controller@sha256:f024d5c324f4bad53a8b5ce014658d54656cb5648e281398b9490529566d9f51
+    name: registry.redhat.io/container-native-virtualization/virt-controller:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-handler@sha256:85be45faf753cd06df47ec5170a90a980489b96b1679e72ff7507b97a2f21104
+    name: registry.redhat.io/container-native-virtualization/virt-handler:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-launcher@sha256:3640f5ccd861da83038da92b2be426f7a1f67e1a514d529283a9174aeebe61c0
+    name: registry.redhat.io/container-native-virtualization/virt-launcher:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virt-operator@sha256:41443337457558e0d2c5cd8ff8a4fc98e4908254b856342a8571b061e61d5179
+    name: registry.redhat.io/container-native-virtualization/virt-operator:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/virtio-win@sha256:266d5547012009b8a4b9e1122dfd012d196e13cacc4cac031df9766ab253e008
+    name: registry.redhat.io/container-native-virtualization/virtio-win:v2.5.2-3
+  - image: registry.redhat.io/container-native-virtualization/vm-import-controller-rhel8@sha256:8b15f9b6133868194a78dec5890304af337131ed2359ea7a6201c1f0bfc3b7ba
+    name: registry.redhat.io/container-native-virtualization/vm-import-controller-rhel8:v2.5.2-5
+  - image: registry.redhat.io/container-native-virtualization/vm-import-operator-rhel8@sha256:9a92fded6940d376c9c6dbf3a0a8de6d7df22c3f40a2c534465f02b74ff6106e
+    name: registry.redhat.io/container-native-virtualization/vm-import-operator-rhel8:v2.5.2-5
+  - image: registry.redhat.io/container-native-virtualization/vm-import-virtv2v-rhel8@sha256:ab4216dc2d7ee8d8501fcdb9b44503623f62d37e064c4f99255a72a17f5ba049
+    name: registry.redhat.io/container-native-virtualization/vm-import-virtv2v-rhel8:v2.5.2-5
+  replaces: kubevirt-hyperconverged-operator.v2.5.1
+  selector:
+    matchLabels:
+      alm-owner-kubevirt: kubevirt-hyperconverged
+      operated-by: kubevirt-hyperconverged
+  version: 2.5.2
+  webhookdefinitions:
+  - admissionReviewVersions:
+    - v1beta1
+    - v1
+    containerPort: 4343
+    deploymentName: hco-webhook
+    failurePolicy: Fail
+    generateName: validate-hco.kubevirt.io
+    rules:
+    - apiGroups:
+      - hco.kubevirt.io
+      apiVersions:
+      - v1alpha1
+      - v1beta1
+      operations:
+      - CREATE
+      - DELETE
+      - UPDATE
+      resources:
+      - hyperconvergeds
+    sideEffects: None
+    timeoutSeconds: 30
+    type: ValidatingAdmissionWebhook
+    webhookPath: /validate-hco-kubevirt-io-v1beta1-hyperconverged
+  - admissionReviewVersions:
+    - v1beta1
+    containerPort: 8443
+    deploymentName: node-maintenance-operator
+    failurePolicy: Fail
+    generateName: nodemaintenance-validation.kubevirt.io
+    rules:
+    - apiGroups:
+      - nodemaintenance.kubevirt.io
+      apiVersions:
+      - v1beta1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - nodemaintenances
+      scope: Cluster
+    sideEffects: None
+    timeoutSeconds: 15
+    type: ValidatingAdmissionWebhook
+    webhookPath: /validate-nodemaintenance-kubevirt-io-v1beta1-nodemaintenances
